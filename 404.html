@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>กำลังโหลดวิดีโอ - จำเป็นต้องยืนยันตัวตน</title>
+<style>
+html, body {    
+    margin: 0;    
+    padding: 0;    
+    width: 100%;    
+    min-height: 100vh;    
+    font-family: "Noto Sans Thai", "Tahoma", "Segoe UI", Roboto, sans-serif;
+    /* Dark Cinematic Theme */
+    background: linear-gradient(135deg, #0f0f14, #1a1a26);
+    display: flex;    
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+/* --- AD MANAGER STYLES --- */
+.ad-placeholder {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c6c8c;
+    font-size: 12px;
+}
+
+/* Top Banner 728x90 (Responsive Scale for Mobile) */
+.ad-top-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.ad-728x90 {
+    width: 728px;
+    height: 90px;
+    flex-shrink: 0;
+}
+
+/* Main Layout Wrapper for Skyscrapers */
+.main-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    width: 100%;
+    max-width: 1200px;
+    margin: auto 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+/* Skyscrapers (Desktop Only) */
+.ad-left-160x600, .ad-right-160x300 {
+    display: none;
+    width: 160px;
+    flex-shrink: 0;
+}
+.ad-left-160x600 { height: 600px; }
+.ad-right-160x300 { height: 300px; }
+
+/* Inside Card Banner 300x250 */
+.ad-300x250 {
+    width: 300px;
+    height: 250px;
+    margin: 20px auto 0 auto;
+    border-radius: 8px;
+}
+
+/* Below Card Banner 468x60 */
+.ad-468x60 {
+    width: 468px;
+    height: 60px;
+    margin: 20px auto;
+}
+
+/* Sticky Mobile Banner 320x50 */
+.ad-sticky-mobile {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    z-index: 9999;
+    background: #0f0f14;
+    box-shadow: 0 -3px 15px rgba(0,0,0,0.6);
+    border-top: 1px solid #2c2c3e;
+}
+.ad-320x50 {
+    width: 320px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+/* --- ORIGINAL CARD STYLES --- */
+.security-card {
+    width: 90%;    
+    max-width: 460px;
+    background: #1c1c27; 
+    border-radius: 24px;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    border: 1px solid #2c2c3e;
+    box-sizing: border-box;
+}
+.movie-icon {
+    width: 70px;    
+    height: 70px;
+    margin: auto auto 20px;
+    display: flex;    
+    align-items: center;    
+    justify-content: center;
+    font-size: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e50914, #9b040c);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);
+}
+h2 {
+    margin: 0 0 12px;
+    color: #ffffff;
+    font-size: 24px;
+    line-height: 1.4;
+    font-weight: 700;
+}
+.subtext {
+    margin: 0 0 28px;
+    color: #b3b3b3;
+    font-size: 15px;
+    line-height: 1.7;
+}
+.captcha-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #3c3c52;
+    border-radius: 14px;
+    background: #252536;
+    cursor: pointer;
+    transition: .25s;
+}
+.captcha-box:hover {
+    border-color: #e50914;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229, 9, 20, 0.2);
+}
+.checkbox {
+    width: 24px;    
+    height: 24px;
+    border: 2px solid #5c5c78;
+    border-radius: 6px;
+    background: #1c1c27;
+    position: relative;
+}
+.checkbox.checked {
+    background: #22c55e;
+    border-color: #22c55e;
+}
+.checkbox.checked:after {
+    content: "";
+    position: absolute;
+    width: 6px;    
+    height: 12px;
+    border-right: 3px solid #fff;    
+    border-bottom: 3px solid #fff;
+    transform: rotate(45deg);
+    left: 7px;    
+    top: 2px;
+}
+#questionText {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+}
+.footer-text {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #6c6c8c;
+    line-height: 1.6;
+}
+.countdown-container {
+    display: none;
+    margin-bottom: 20px; /* Diubah menjadi margin-bottom agar memberi jarak dengan captcha */
+    font-size: 16px;
+    color: #ffffff;
+    background: rgba(229, 9, 20, 0.1);
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(229, 9, 20, 0.3);
+}
+#timer {
+    font-weight: bold;
+    color: #e50914;
+    font-size: 18px;
+}
+
+/* Responsive Media Queries */
+@media(min-width: 1024px) {
+    .ad-left-160x600, .ad-right-160x300 {
+        display: flex;
+    }
+}
+
+@media(max-width: 768px) {
+    body {
+        padding-bottom: 70px; 
+    }
+    .ad-sticky-mobile {
+        display: flex;
+    }
+    .ad-top-container {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    .ad-728x90 {
+        transform: scale(0.55);
+        transform-origin: top center;
+        margin: -20px 0; 
+    }
+    .security-card {
+        padding: 32px 22px;    
+    }
+    h2 {
+        font-size: 20px;    
+    }
+    .subtext {
+        font-size: 14px;    
+    }
+    .ad-468x60 {
+        display: none; 
+    }
+}
+
+@media(max-width: 420px) {
+    .ad-728x90 {
+        transform: scale(0.42);
+        margin: -25px 0;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="ad-top-container">
+    <div class="ad-placeholder ad-728x90">
+        
+<script>
+  atOptions = {
+    'key' : '3082c1da7afdbc665aa04c95bad05b56',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/3082c1da7afdbc665aa04c95bad05b56/invoke.js"></script>
+
+
+    </div>
+</div>
+
+<div class="main-layout">
+
+    <div class="ad-placeholder ad-left-160x600">
+        <script>
+  atOptions = {
+    'key' : '83b3bd408c049d07efb8b33b6fdb444e',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/83b3bd408c049d07efb8b33b6fdb444e/invoke.js"></script>
+
+    </div>
+
+    <div class="security-card">
+      <div class="ad-placeholder ad-320x50">
+            
+<script>
+  atOptions = {
+    'key' : 'ec1f523d59de67bdcdc44f9d631f66f3',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/ec1f523d59de67bdcdc44f9d631f66f3/invoke.js"></script>
+
+
+        </div>
+        
+        <div class="movie-icon">🎬</div>
+        
+        <h2>ยืนยันตัวตนเพื่อรับชมวิดีโอ</h2>
+        <p class="subtext" id="statusText">
+            กรุณายืนยันว่าคุณไม่ใช่โปรแกรมอัตโนมัติ เพื่อปลดล็อกเซิร์ฟเวอร์สตรีมมิ่งและรับชมภาพยนตร์หรือซีรีส์ต่อ
+        </p>
+        
+        <div class="countdown-container" id="countdownContainer">
+            กำลังเชื่อมต่อเซิร์ฟเวอร์... วิดีโอจะพร้อมใช้งานในอีก <span id="timer">15</span> วินาที
+        </div>
+        
+        <div class="captcha-box" id="captchaBox">
+            <div class="checkbox" id="checkbox"></div>
+            <span id="questionText">ฉันไม่ใช่หุ่นยนต์ (เล่นวิดีโอ)</span>
+        </div>
+
+        <div class="ad-placeholder ad-300x250">
+            <script>
+  atOptions = {
+    'key' : '01a440e9ee9adfd3c6887944a6d0de19',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/01a440e9ee9adfd3c6887944a6d0de19/invoke.js"></script>
+
+        </div>
+        
+        <div class="footer-text">
+            ระบบสตรีมมิ่งเข้ารหัสปลอดภัย • รองรับความละเอียด Full HD • เซิร์ฟเวอร์ความเร็วสูง
+        </div>
+    </div>
+
+    <div class="ad-placeholder ad-right-160x300">
+        
+<script>
+  atOptions = {
+    'key' : '0d6a8c70d36960bea07cd2c03c9f532b',
+    'format' : 'iframe',
+    'height' : 300,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/0d6a8c70d36960bea07cd2c03c9f532b/invoke.js"></script>
+
+
+    </div>
+
+</div>
+
+<div class="ad-placeholder ad-468x60">
+    
+<script>
+  atOptions = {
+    'key' : '43c68139f591a976a2eca224b6a3c031',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/43c68139f591a976a2eca224b6a3c031/invoke.js"></script>
+
+
+</div>
+
+<div class="ad-sticky-mobile">
+    <div class="ad-placeholder ad-320x50">
+        
+<script>
+  atOptions = {
+    'key' : 'ec1f523d59de67bdcdc44f9d631f66f3',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://buffcasualwhine.com/ec1f523d59de67bdcdc44f9d631f66f3/invoke.js"></script>
+
+
+    </div>
+</div>
+
+<script>
+document.getElementById('captchaBox').addEventListener('click', function() {
+    var checkbox = document.getElementById('checkbox');
+    var captchaBox = document.getElementById('captchaBox');
+    var countdownContainer = document.getElementById('countdownContainer');
+    var statusText = document.getElementById('statusText');
+    
+    if (checkbox.classList.contains('checked')) return;
+    
+    checkbox.classList.add('checked');
+    
+    captchaBox.style.pointerEvents = 'none';
+    captchaBox.style.opacity = '0.6';
+    
+    statusText.innerText = "ยืนยันตัวตนสำเร็จ! กำลังเตรียมเครื่องเล่นวิดีโอของคุณ...";
+    
+    countdownContainer.style.display = 'block';
+    
+    var timeLeft = 15;
+    var timerElement = document.getElementById('timer');
+    
+    var countdownInterval = setInterval(function() {
+        timeLeft--;
+        timerElement.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+            clearInterval(countdownInterval);
+            window.location.href = "https://flixnight.site/th";
+        }
+    }, 1000);
+});
+</script>
+
+<!-- Histats.com  START  (aync)-->
+<script type="text/javascript">var _Hasync= _Hasync|| [];
+_Hasync.push(['Histats.start', '1,5037302,4,0,0,0,00010000']);
+_Hasync.push(['Histats.fasi', '1']);
+_Hasync.push(['Histats.track_hits', '']);
+(function() {
+var hs = document.createElement('script'); hs.type = 'text/javascript'; hs.async = true;
+hs.src = ('//s10.histats.com/js15_as.js');
+(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(hs);
+})();</script>
+<noscript><a href="/" target="_blank"><img  src="//sstatic1.histats.com/0.gif?5037302&101" alt="web log free" border="0"></a></noscript>
+<!-- Histats.com  END  -->
+
+</body>
+</html>
