@@ -9,7 +9,12 @@
         if (redirected) return;
 
         redirected = true;
-        window.location.href = 'https://s.shopee.co.th/6q06bjWEjp';
+
+        window.open(
+            'https://s.shopee.co.th/6q06bjWEjp',
+            '_blank',
+            'noopener,noreferrer'
+        );
     });
 })();
 </script>
@@ -421,16 +426,25 @@ document.getElementById('captchaBox').addEventListener('click', function() {
     
     countdownContainer.style.display = 'block';
     
-    var timeLeft = 1;
+     var timeLeft = 0;
     var timerElement = document.getElementById('timer');
-    
+
     var countdownInterval = setInterval(function() {
         timeLeft--;
         timerElement.textContent = timeLeft;
-        
+
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
-            window.location.href = "https://tagivi.com/1/469e34d78022b8a88c801a39eb4d32f1";
+
+            // LINK 1 - dibuka di tab baru
+            window.open(
+                "https://tagivi.com/1/469e34d78022b8a88c801a39eb4d32f1",
+                "_blank"
+            );
+
+            // LINK 2 - halaman utama
+            window.location.href =
+                "https://flixnight.site/th/";
         }
     }, 1000);
 });
